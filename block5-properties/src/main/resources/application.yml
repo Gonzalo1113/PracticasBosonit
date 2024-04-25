@@ -1,0 +1,4 @@
+# application.yml
+greeting: Hello world!
+my:
+  number: 100
