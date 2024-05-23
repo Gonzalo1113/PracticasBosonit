@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.Optional;
+
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/persona")
@@ -16,8 +19,14 @@ public class AgregarPersonaController {
     private PersonaService personaService;
 
     @PostMapping
-    public ResponseEntity<Persona> agregarPersona(@RequestBody Persona persona) {
+    public Persona agregarPersona(@RequestBody Persona persona) {
         Persona personaAgregada = personaService.agregarPersona(persona);
-        return new ResponseEntity<>(personaAgregada, HttpStatus.CREATED);
+
+        return personaAgregada;
     }
+
+
+
+
+
 }

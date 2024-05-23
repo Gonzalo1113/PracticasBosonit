@@ -13,12 +13,8 @@ public class ModificarPersonaController {
     private PersonaService personaService;
 
     @PutMapping("/{nombre}")
-    public ResponseEntity<Persona> modificarPersona(@PathVariable String nombre, @RequestBody Persona persona) {
+    public Persona modificarPersona(@PathVariable String nombre, @RequestBody Persona persona) {
         Persona personaModificada = personaService.modificarPersona(nombre, persona);
-        if (personaModificada != null) {
-            return new ResponseEntity<>(personaModificada, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return personaModificada;
     }
 }

@@ -1,5 +1,9 @@
-package com.bosonit.formacion.block7crudvalidation;
-import com.bosonit.formacion.block7crudvalidation.Model.Persona;
+package com.bosonit.formacion.block7crudvalidation.services;
+import com.bosonit.formacion.block7crudvalidation.exceptions.EntidadNoEncontrada;
+import com.bosonit.formacion.block7crudvalidation.clase.Persona;
+import com.bosonit.formacion.block7crudvalidation.dtos.PersonaInputDTO;
+import com.bosonit.formacion.block7crudvalidation.dtos.PersonaSimpleOutputDTO;
+import com.bosonit.formacion.block7crudvalidation.repositories.PersonaRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,24 +13,27 @@ import java.util.*;
 public class PersonaServiceImpl implements PersonaService {
 
     @Autowired
+    private EntidadNoEncontrada entidadNoEncontrada;
+
+    @Autowired
     private PersonaRepository personaRepository;
 
 
-        public PersonaOutputDTO buscarPersonaID (Long id){
+        public PersonaSimpleOutputDTO buscarPersonaID (long id){
             return personaRepository.findById(id)
-                    .orElseThrow(() -> new EntityNotFoundException("Persona not found with id: " + id))
+                    .orElseThrow(() -> new EntityNotFoundException("No se encontro la persona con nombre: " + id))
                     .personatoPersonaOutputDto();
         }
 
-        public PersonaOutputDTO buscarPersonaPorUsuario (String name){
+        public PersonaSimpleOutputDTO buscarPersonaPorUsuario (String name){
             return personaRepository.findByName(name)
-                    .orElseThrow(() -> new EntityNotFoundException("Persona not found with username: " + name))
+                    .orElseThrow(() -> new EntityNotFoundException("No se encontro la persona con nombre: " + name))
                     .personatoPersonaOutputDto();
         }
 
-        public List<PersonaOutputDTO> mostrarTodos() {
+        public List<PersonaSimpleOutputDTO> mostrarTodos() {
             List<Persona> personas = personaRepository.findAll();
-            List<PersonaOutputDTO> personasOutput = new ArrayList<>();
+            List<PersonaSimpleOutputDTO> personasOutput = new ArrayList<>();
             for (Persona persona : personas) {
                 personasOutput.add(persona.personatoPersonaOutputDto());
             }
@@ -34,15 +41,41 @@ public class PersonaServiceImpl implements PersonaService {
         }
 
 
-        public PersonaOutputDTO agregarPersona(PersonaInputDTO personaInputDTO) {
+        public PersonaSimpleOutputDTO agregarPersona(PersonaInputDTO personaInputDTO) {
                 Persona persona = new Persona(personaInputDTO);
                 Persona personaAgregada = personaRepository.save(persona);
                 return personaAgregada.personatoPersonaOutputDto();
             }
 
 
-            public void borrarPersona(Long id) {
-                personaRepository.deleteById(id);
-            }
+        public void borrarPersona(long id) {
+            Persona persona = personaRepository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("No se encontro la persona con ID: " + id));
+            personaRepository.delete(persona);
+            System.out.println("Se ha borrado la persona con ID: " + id + " correctamente");
+        }
+
+    @Override
+    public PersonaSimpleOutputDTO modificarPersona(long id, PersonaInputDTO personaInputDTO) {
+        Persona persona = personaRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró la persona con ID: " + id));
+
+        persona.setUsuario(personaInputDTO.getUsuario());
+        persona.setPassword(personaInputDTO.getPassword());
+        persona.setName(personaInputDTO.getName());
+        persona.setSurname(personaInputDTO.getSurname());
+        persona.setCompany_email(personaInputDTO.getCompanyEmail());
+        persona.setPersonal_email(personaInputDTO.getPersonalEmail());
+        persona.setCity(personaInputDTO.getCity());
+        persona.setActive(personaInputDTO.isActive());
+        persona.setCreated_date(personaInputDTO.getCreatedDate());
+        persona.setImagen_url(personaInputDTO.getImageUrl());
+        persona.setTermination_date(personaInputDTO.getTerminationDate());
+
+
+        Persona personaActualizada = personaRepository.save(persona);
+        return personaActualizada.personatoPersonaOutputDto();
+    }
+
     }
 

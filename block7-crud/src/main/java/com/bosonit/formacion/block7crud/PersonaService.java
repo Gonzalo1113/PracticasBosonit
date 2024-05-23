@@ -14,33 +14,59 @@ public class PersonaService {
     private PersonaRepository personaRepository;
 
     public Persona agregarPersona(Persona persona) {
-        return personaRepository.save(persona);
-    }
-
-    public Persona modificarPersona(String nombre, Persona persona) {
-        Optional<Persona> personaOptional = personaRepository.findByNombre(nombre);
-        if (personaOptional.isPresent()) {
-            persona.setID(personaOptional.get().getID());
-            return personaRepository.save(persona);
+            if (persona.getNombre() != null && !persona.getNombre().isEmpty()) {
+                Persona personaAgregada = personaRepository.save(persona);
+                return personaAgregada;
+            }
+            throw new CagadaException("El nombre de la persona no puede ser nulo o vacío");
         }
-        return null; // O manejar de alguna forma el caso en el que la persona no exista
+
+
+
+
+        public Persona modificarPersona(String nombre, Persona persona) {
+        // Condiciones... chequear. Si hay error, lanza CagadaException
+        if (nombre == null) {
+            throw new CagadaException("El nombre no puede ser nulo");
+        }
+        if (persona == null) {
+            throw new CagadaException("La persona a modificar no puede ser nula");
+        }
+        if (!nombre.equals(persona.getNombre())) {
+            throw new CagadaException("El nombre proporcionado no coincide con el nombre de la persona");
+        }
+
+
+
+        persona.setPoblacion(persona.getPoblacion());
+        persona.setNombre(persona.getNombre());
+        persona.setEdad(persona.getEdad());
+
+        // Guardar la persona modificada
+        Persona personaModificada = personaRepository.save(persona);
+        return personaModificada;
     }
 
-    // Método para borrar una persona por su nombre
     public void borrarPersona(String nombre) {
-        Optional<Persona> personaOptional = personaRepository.findByNombre(nombre);
-        personaOptional.ifPresent(persona -> personaRepository.delete(persona));
+        Persona personaABorrar = personaRepository.findByNombre(nombre);
+        if (personaABorrar.getNombre() != nombre ) {
+            throw new NotFoundException("No se encuentra la persona con ese nombre");
+        }
+        personaRepository.delete(personaABorrar);
     }
 
-    // Método para obtener una persona por su nombre
     public Persona obtenerPersonaPorNombre(String nombre) {
-        Optional<Persona> personaOptional = personaRepository.findByNombre(nombre);
-        return personaOptional.orElse(null);
+        // Buscar la persona por su nombre
+        Persona personaEncontrada = personaRepository.findByNombre(nombre);
+        if (personaEncontrada == null) {
+            throw new NotFoundException("No se encuentra la persona con ese nombre");
+        }
+        return personaEncontrada;
     }
 
-    // Método para obtener todas las personas
     public List<Persona> obtenerTodasLasPersonas() {
         return personaRepository.findAll();
     }
+
 }
 

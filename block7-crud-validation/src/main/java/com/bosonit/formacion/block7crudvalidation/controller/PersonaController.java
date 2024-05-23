@@ -1,7 +1,8 @@
-package com.bosonit.formacion.block7crudvalidation;
+package com.bosonit.formacion.block7crudvalidation.controller;
+import com.bosonit.formacion.block7crudvalidation.dtos.PersonaInputDTO;
+import com.bosonit.formacion.block7crudvalidation.dtos.PersonaSimpleOutputDTO;
+import com.bosonit.formacion.block7crudvalidation.services.PersonaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,27 +15,36 @@ public class PersonaController {
     private PersonaService personaService;
 
     @GetMapping("/{id}")
-    public PersonaOutputDTO buscarPersonaPorId(@PathVariable Long id) {
+    public PersonaSimpleOutputDTO buscarPersonaPorId(@PathVariable long id) {
         return personaService.buscarPersonaID(id);
     }
 
     @GetMapping("/buscar")
-    public PersonaOutputDTO buscarPersonaPorUsuario(@RequestParam String usuario) {
-        return personaService.buscarPersonaPorUsuario(usuario);
+    public PersonaSimpleOutputDTO buscarPersonaPorUsuario(@RequestParam String name) {
+        return personaService.buscarPersonaPorUsuario(name);
     }
 
     @GetMapping
-    public List<PersonaOutputDTO> mostrarTodos() {
+    public List<PersonaSimpleOutputDTO> mostrarTodos() {
         return personaService.mostrarTodos();
     }
 
     @PostMapping
-    public PersonaOutputDTO agregarPersona(@RequestBody PersonaInputDTO personaInputDTO) {
+    public PersonaSimpleOutputDTO agregarPersona(@RequestBody PersonaInputDTO personaInputDTO) {
         return personaService.agregarPersona(personaInputDTO);
     }
 
     @DeleteMapping("/{id}")
-    public void borrarPersona(@PathVariable Long id) {
+    public void borrarPersona(@PathVariable long id) {
         personaService.borrarPersona(id);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PersonaSimpleOutputDTO> updatePersona(@PathVariable long id, @RequestBody PersonaInputDTO personaInputDTO) {
+        if (personaInputDTO.getNombre() == null || personaInputDTO.getPoblacion() == null || personaInputDTO.getEdad() <= 0) {
+            throw new UnprocessableEntityException("Invalid input data");
+        }
+        PersonaSimpleOutputDTO updatedPersona = personaService.modificarPersona(id, personaInputDTO);
+        return ResponseEntity.ok(updatedPersona);
     }
 }

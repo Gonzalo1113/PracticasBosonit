@@ -1,11 +1,25 @@
-package com.bosonit.formacion.block7crudvalidation;
+package com.bosonit.formacion.block7crudvalidation.exceptions;
 
 import java.util.Date;
 
 public class ErrorPersonalizado {
-        private Date timestamp;
-        private int httpCode;
-        private String mensaje;
+    private Date timestamp;
+    private int httpCode;
+    private String mensaje;
+
+    public ErrorPersonalizado() {
+    }
+
+    public ErrorPersonalizado(Date timestamp, int httpCode, String mensaje) {
+        this.timestamp = timestamp;
+        this.httpCode = httpCode;
+        this.mensaje = mensaje;
+    }
+    public ErrorPersonalizado(String mensaje, int httpCode) {
+        this.timestamp = new Date();
+        this.httpCode = httpCode;
+        this.mensaje = mensaje;
+    }
 
     public Date getTimestamp() {
         return timestamp;
@@ -13,14 +27,6 @@ public class ErrorPersonalizado {
 
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
-    }
-
-    public String getMensaje() {
-        return mensaje;
-    }
-
-    public void setMensaje(String mensaje) {
-        this.mensaje = mensaje;
     }
 
     public int getHttpCode() {
@@ -31,5 +37,11 @@ public class ErrorPersonalizado {
         this.httpCode = httpCode;
     }
 
-}
+    public String getMensaje() {
+        return mensaje;
+    }
 
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
+    }
+}

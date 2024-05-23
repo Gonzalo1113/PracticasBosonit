@@ -8,7 +8,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PersonaOutputDTO {
+public class PersonaSimpleOutputDTO {
     private long  id_persona;
     private String usuario;
     private String name;

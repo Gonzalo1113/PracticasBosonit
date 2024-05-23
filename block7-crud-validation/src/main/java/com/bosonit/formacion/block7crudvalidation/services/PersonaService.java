@@ -1,17 +1,22 @@
-package com.bosonit.formacion.block7crudvalidation;
+package com.bosonit.formacion.block7crudvalidation.services;
+
+import com.bosonit.formacion.block7crudvalidation.dtos.PersonaInputDTO;
+import com.bosonit.formacion.block7crudvalidation.dtos.PersonaSimpleOutputDTO;
 
 import java.util.List;
 
 public interface PersonaService {
 
-    PersonaOutputDTO buscarPersonaID(Long id);
+    PersonaSimpleOutputDTO buscarPersonaID(long id);
 
-    PersonaOutputDTO buscarPersonaPorUsuario(String usuario);
+    PersonaSimpleOutputDTO buscarPersonaPorUsuario(String name);
 
-    List<PersonaOutputDTO> mostrarTodos ();
+    List<PersonaSimpleOutputDTO> mostrarTodos ();
 
-    PersonaOutputDTO agregarPersona (PersonaInputDTO persona);
+    PersonaSimpleOutputDTO agregarPersona (PersonaInputDTO persona);
 
-    void borrarPersona(Long id);
+    void borrarPersona(long id);
+
+    PersonaSimpleOutputDTO modificarPersona(long id, PersonaInputDTO personaInputDTO);
 
 }

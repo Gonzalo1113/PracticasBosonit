@@ -1,6 +1,6 @@
-package com.bosonit.formacion.block7crudvalidation;
+package com.bosonit.formacion.block7crudvalidation.repositories;
 
-import com.bosonit.formacion.block7crudvalidation.Model.Persona;
+import com.bosonit.formacion.block7crudvalidation.clase.Persona;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

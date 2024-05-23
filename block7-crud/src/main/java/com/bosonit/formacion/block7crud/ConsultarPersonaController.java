@@ -15,18 +15,14 @@ public class ConsultarPersonaController {
     private PersonaService personaService;
 
     @GetMapping("/{nombre}")
-    public ResponseEntity<Persona> obtenerPersonaPorNombre(@PathVariable String nombre) {
+    public Persona obtenerPersonaPorNombre(@PathVariable String nombre) {
         Persona persona = personaService.obtenerPersonaPorNombre(nombre);
-        if (persona != null) {
-            return new ResponseEntity<>(persona, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        return persona;
     }
 
     @GetMapping
-    public ResponseEntity<List<Persona>> obtenerTodasLasPersonas() {
+    public List<Persona> obtenerTodasLasPersonas() {
         List<Persona> personas = personaService.obtenerTodasLasPersonas();
-        return new ResponseEntity<>(personas, HttpStatus.OK);
+        return personas;
     }
 }

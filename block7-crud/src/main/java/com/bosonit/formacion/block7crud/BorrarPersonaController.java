@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLOutput;
+
 @RestController
 @RequestMapping("/persona")
 public class BorrarPersonaController {
@@ -13,8 +15,8 @@ public class BorrarPersonaController {
     private PersonaService personaService;
 
     @DeleteMapping("/{nombre}")
-    public ResponseEntity<Void> borrarPersona(@PathVariable String nombre) {
+    public void borrarPersona(@PathVariable String nombre) {
         personaService.borrarPersona(nombre);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            System.out.println("Persona Borrada Perfectamente");
     }
 }
