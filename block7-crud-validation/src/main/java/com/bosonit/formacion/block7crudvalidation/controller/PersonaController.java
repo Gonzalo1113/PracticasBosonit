@@ -2,7 +2,9 @@ package com.bosonit.formacion.block7crudvalidation.controller;
 import com.bosonit.formacion.block7crudvalidation.dtos.PersonaInputDTO;
 import com.bosonit.formacion.block7crudvalidation.dtos.PersonaSimpleOutputDTO;
 import com.bosonit.formacion.block7crudvalidation.services.PersonaService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -40,11 +42,12 @@ public class PersonaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PersonaSimpleOutputDTO> updatePersona(@PathVariable long id, @RequestBody PersonaInputDTO personaInputDTO) {
-        if (personaInputDTO.getNombre() == null || personaInputDTO.getPoblacion() == null || personaInputDTO.getEdad() <= 0) {
-            throw new UnprocessableEntityException("Invalid input data");
+    public ResponseEntity<PersonaSimpleOutputDTO> modificarPersona(@PathVariable long id, @RequestBody PersonaInputDTO personaInputDTO) {
+        try {
+            PersonaSimpleOutputDTO updatedPersona = personaService.modificarPersona(id, personaInputDTO);
+            return ResponseEntity.ok(updatedPersona);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(404).body(null);
         }
-        PersonaSimpleOutputDTO updatedPersona = personaService.modificarPersona(id, personaInputDTO);
-        return ResponseEntity.ok(updatedPersona);
     }
 }

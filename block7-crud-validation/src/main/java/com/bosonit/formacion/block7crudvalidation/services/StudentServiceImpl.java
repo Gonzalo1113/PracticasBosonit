@@ -2,7 +2,7 @@ package com.bosonit.formacion.block7crudvalidation.services;
 
 import com.bosonit.formacion.block7crudvalidation.clase.AsignaturasEntity;
 import com.bosonit.formacion.block7crudvalidation.clase.StudentEntity;
-import com.bosonit.formacion.block7crudvalidation.dtos.AsignaturaOutputDTO;
+import com.bosonit.formacion.block7crudvalidation.dtos.AsignaturaOutputDTOFull;
 import com.bosonit.formacion.block7crudvalidation.dtos.EstudianteInputDTO;
 import com.bosonit.formacion.block7crudvalidation.dtos.EstudianteOutputDTO;
 import com.bosonit.formacion.block7crudvalidation.repositories.AsignaturasRepository;
@@ -10,7 +10,10 @@ import com.bosonit.formacion.block7crudvalidation.repositories.StudenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentServiceImpl  implements  StudentService{
@@ -83,14 +86,15 @@ public class StudentServiceImpl  implements  StudentService{
     }
 
     @Override
-    public List<AsignaturaOutputDTO> getAsignaturasByStudentId(long idEstudiante) {
-        StudentEntity student = studentRepository.findById(idEstudiante).orElse(null);
-        if (student != null) {
+    public List<AsignaturaOutputDTOFull> getAsignaturasByStudentId(long idEstudiante) {
+        Optional<StudentEntity> optionalStudent = studentRepository.findById(idEstudiante);
+        if (optionalStudent.isPresent()) {
+            StudentEntity student = optionalStudent.get();
             return student.getAsignaturas().stream()
-                    .map(AsignaturasEntity::asignaturatoasignaturaOutputDto)
-                    .toList();
+                    .map(AsignaturasEntity::parseAsignaturaOutputFull)
+                    .collect(Collectors.toList());
         } else {
-            return null;
+            return Collections.emptyList();
         }
     }
 
@@ -98,7 +102,7 @@ public class StudentServiceImpl  implements  StudentService{
     public boolean deleteAsignatura(long idAsignatura) {
         AsignaturasEntity asignatura = asignaturaRepository.findById(idAsignatura).orElse(null);
         if (asignatura != null) {
-            if (asignatura.getEstudiantesenAsignatura().isEmpty()) {
+            if (asignatura.getEstudiantesEntities().isEmpty()) {
                 asignaturaRepository.deleteById(idAsignatura);
                 return true;
             } else {

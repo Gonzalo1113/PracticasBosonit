@@ -5,10 +5,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
-public interface  AsignaturasRepository extends JpaRepository<AsignaturasEntity, Long> {
+public interface AsignaturasRepository extends JpaRepository<AsignaturasEntity, Long> {
 
-    List<AsignaturasEntity> findAllById(List<String> idAsignatura);
+
+    Optional<AsignaturasEntity> findById(long id);
 }

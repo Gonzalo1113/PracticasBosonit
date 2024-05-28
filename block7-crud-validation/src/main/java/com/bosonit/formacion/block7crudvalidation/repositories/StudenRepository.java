@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface StudenRepository extends JpaRepository <StudentEntity, Long> {
     @Query(value = "SELECT * FROM Student WHERE idAsignatura like %?1%", nativeQuery = true)
-    List<StudentEntity> findByIdAsignaturaLike(String idAsignatura);
-    List<StudentEntity> findByPersonaId(String idPersona);
+
+    List<StudentEntity> findByPersonaId(long idPersona);
 }

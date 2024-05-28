@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,21 +36,23 @@ public class StudentEntity {
     @Column(name = "branch", nullable = false)
     private String branch;
 
-    @OneToMany(mappedBy = "student")
+    @ManyToMany
+    @JoinTable(
+            name = "student_asignaturas",
+            joinColumns = @JoinColumn(name = "id_student"),
+            inverseJoinColumns = @JoinColumn(name = "id_asignatura")
+    )
     private List<AsignaturasEntity> asignaturas;
 
-
-    public StudentEntity(EstudianteInputDTO studentInputDto){
-
+    public StudentEntity(EstudianteInputDTO studentInputDto) {
         this.id_student = studentInputDto.getIdStudent();
-
         this.numHoursWeek = studentInputDto.getNumHoursWeek();
         this.coments = studentInputDto.getComents();
         this.profesor = studentInputDto.getProfesor();
         this.branch = studentInputDto.getBranch();
+    }
 
-    };
-    public EstudianteOutputDTO studenttoStudentOutpuDto(){
+    public EstudianteOutputDTO studenttoStudentOutpuDto() {
         return new EstudianteOutputDTO(
                 this.id_student,
                 this.persona,

@@ -1,6 +1,6 @@
 package com.bosonit.formacion.block7crudvalidation.services;
 
-import com.bosonit.formacion.block7crudvalidation.dtos.AsignaturaOutputDTO;
+import com.bosonit.formacion.block7crudvalidation.dtos.AsignaturaOutputDTOFull;
 import com.bosonit.formacion.block7crudvalidation.dtos.EstudianteInputDTO;
 import com.bosonit.formacion.block7crudvalidation.dtos.EstudianteOutputDTO;
 
@@ -20,7 +20,7 @@ public interface StudentService {
     EstudianteOutputDTO asignarAsignatura(List<Long> idAsignatura, long idEstudiante);
     EstudianteOutputDTO desasignarAsignaturas(List<Long> idAsignaturas, long idEstudiante);
 
-    List<AsignaturaOutputDTO> getAsignaturasByStudentId(long idEstudiante);
+    List<AsignaturaOutputDTOFull> getAsignaturasByStudentId(long idEstudiante);
 
     boolean deleteAsignatura(long idAsignatura);
 }

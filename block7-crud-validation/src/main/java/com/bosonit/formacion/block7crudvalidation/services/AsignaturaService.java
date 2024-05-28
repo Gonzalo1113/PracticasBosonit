@@ -1,20 +1,26 @@
 package com.bosonit.formacion.block7crudvalidation.services;
 
+import com.bosonit.formacion.block7crudvalidation.clase.AsignaturasEntity;
 import com.bosonit.formacion.block7crudvalidation.dtos.AsignaturaInputDTO;
-import com.bosonit.formacion.block7crudvalidation.dtos.AsignaturaOutputDTO;
+import com.bosonit.formacion.block7crudvalidation.dtos.AsignaturaOutFather;
+import com.bosonit.formacion.block7crudvalidation.dtos.AsignaturaOutputDTOSimple;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-@Service
+import java.util.Optional;
+
+
 public interface AsignaturaService {
 
-    AsignaturaOutputDTO buscarAsignatura(Long id, String outputType);
+    AsignaturaOutFather buscarAsignatura(long id, String outputType);
 
-    List<AsignaturaOutputDTO> listarAsignatura(String outputType);
+    List<AsignaturaOutFather> listarAsignatura(String outputType);
 
-    AsignaturaOutputDTO añadirAsignatura(AsignaturaInputDTO asignaturaInput) throws Exception;
+    AsignaturaOutputDTOSimple añadirAsignatura(AsignaturaInputDTO AsignaturaInputdto ) throws Exception;
 
-    void borrarAsignarura(Long id);
+    void borrarAsignatura(long id);
 
-    AsignaturaOutputDTO updateAsignatura(Long id, AsignaturaInputDTO asignaturaInput);
+    AsignaturaOutputDTOSimple updateAsignatura(long id, AsignaturaInputDTO asignaturaInput);
+
+
 }

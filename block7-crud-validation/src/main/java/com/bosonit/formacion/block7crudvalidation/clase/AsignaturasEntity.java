@@ -1,56 +1,76 @@
 package com.bosonit.formacion.block7crudvalidation.clase;
+
 import com.bosonit.formacion.block7crudvalidation.dtos.AsignaturaInputDTO;
-import com.bosonit.formacion.block7crudvalidation.dtos.AsignaturaOutputDTO;
+import com.bosonit.formacion.block7crudvalidation.dtos.AsignaturaOutputDTOFull;
+import com.bosonit.formacion.block7crudvalidation.dtos.AsignaturaOutputDTOSimple;
+import com.bosonit.formacion.block7crudvalidation.dtos.EstudianteOutputDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
-@Table(name = "asignatura")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "EstudianteAsignaturaEntity")
 public class AsignaturasEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id_asignatura;
+    private Long id_asignatura;
 
-    @ManyToOne
-    @JoinColumn(name = "id_student")
-    private List<StudentEntity> estudiantesenAsignatura;
+    @ManyToMany(mappedBy = "asignaturas")
+    private List<StudentEntity> estudiantesEntities;
 
-    @Column(name = "asignatura")
     private String asignatura;
-
-    @Column(name = "coments")
     private String coments;
+    @NonNull
+    private Date initial_date;
+    private Date finish_date;
 
-    @Column(name = "initial_date", nullable = false)
-    private Date initialDate;
-
-    @Column(name = "finish_date")
-    private Date finishDate;
-
-
-    public AsignaturasEntity (AsignaturaInputDTO asignaturaInputDto){
-        this.id_asignatura = Long.valueOf(asignaturaInputDto.getIdAsignatura());
-        this.asignatura= asignaturaInputDto.getAsignatura();
-        this.coments = asignaturaInputDto.getComents();
-        this.initialDate = asignaturaInputDto.getInitialDate();
-        this.finishDate = asignaturaInputDto.getFinishDate();
+    public AsignaturasEntity(AsignaturaInputDTO AsignaturaInput) {
+        this.asignatura = AsignaturaInput.getAsignatura();
+        this.coments = AsignaturaInput.getComents();
+        this.initial_date = AsignaturaInput.getInitial_date();
+        this.finish_date = AsignaturaInput.getFinish_date();
     }
-    public AsignaturaOutputDTO asignaturatoasignaturaOutputDto(){
-        return new AsignaturaOutputDTO(
-                this.id_asignatura,
-                this.asignatura,
-                this.coments,
-                this.initialDate,
-                this.finishDate,
-                this.estudiantesenAsignatura
-        );
+
+    public AsignaturaOutputDTOSimple parseAsignaturaOutputSimple() {
+        AsignaturaOutputDTOSimple AsignaturaOutPutSimple = new AsignaturaOutputDTOSimple();
+
+        AsignaturaOutPutSimple.setId_asignatura(this.id_asignatura);
+        AsignaturaOutPutSimple.setAsignatura(this.asignatura);
+        AsignaturaOutPutSimple.setComents(this.coments);
+        AsignaturaOutPutSimple.setInitial_date(this.initial_date);
+        AsignaturaOutPutSimple.setFinish_date(this.finish_date);
+        return AsignaturaOutPutSimple;
+    }
+
+    public AsignaturaOutputDTOFull parseAsignaturaOutputFull() {
+        AsignaturaOutputDTOFull AsignaturaOutPutFull = new AsignaturaOutputDTOFull();
+
+        AsignaturaOutPutFull.setId_asignatura(this.id_asignatura);
+        AsignaturaOutPutFull.setAsignatura(this.asignatura);
+        AsignaturaOutPutFull.setComents(this.coments);
+        AsignaturaOutPutFull.setInitial_date(this.initial_date);
+        AsignaturaOutPutFull.setFinish_date(this.finish_date);
+        AsignaturaOutPutFull.setEstudiantesEntities(convertirLista());
+        return AsignaturaOutPutFull;
+    }
+
+    public List<EstudianteOutputDTO> convertirLista() {
+        List<EstudianteOutputDTO> estudianteOutPutSimples = new ArrayList<>();
+
+        if (estudiantesEntities != null) {
+            for (StudentEntity estudianteEntity : estudiantesEntities) {
+                estudianteOutPutSimples.add(estudianteEntity.studenttoStudentOutpuDto());
+            }
+        }
+        return estudianteOutPutSimples;
     }
 }
